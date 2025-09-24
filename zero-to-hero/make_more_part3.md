@@ -1,4 +1,4 @@
-Of course. Here is a comprehensive chapter-like explanation of "makemore Part 3," drawing from the provided sources. It covers the key concepts, practical tips, and underlying theory discussed in the lecture.
+Here is a comprehensive chapter-like explanation of "makemore Part 3," drawing from the provided sources. It covers the key concepts, practical tips, and underlying theory discussed in the lecture.
 
 ## Chapter 3: Activations, Gradients, and Batch Normalization
 
@@ -8,7 +8,7 @@ In our previous work, we successfully built a **Multi-Layer Perceptron (MLP)** f
 
 Before we can build bigger models, we must master the fundamentals. This chapter focuses on the behavior of **activations** and **gradients** within an MLP. Understanding how these values propagate, their statistical properties, and how to control them is paramount. Many historical advancements in neural network architecture, especially variations of RNNs, were designed specifically to solve problems related to unstable activations and gradients. We will start by scrutinizing our existing MLP, identifying and fixing subtle issues that, while not catastrophic for a shallow network, become critical obstacles in deeper models.
 
-***
+---
 
 ### 1. Scrutinizing the Initialization
 
@@ -36,7 +36,7 @@ While setting $W_2$ to zero would give us a perfect initial loss, it's generally
 
 By applying these fixes, we eliminate the hockey stick loss curve and, more importantly, often achieve a better final validation loss. The network spends its training cycles more productively from the very beginning.
 
-***
+---
 
 ### 2. The Peril of Saturated Activations
 
@@ -66,7 +66,7 @@ A severe case of this is a **dead neuron**: a neuron that is saturated for every
 
 The fix is analogous to our first problem: we need to make the pre-activations less extreme. We can achieve this by scaling down the weights ($W_1$) and biases ($b_1$) of the first layer, for instance by a factor of 0.2. This results in a pre-activation distribution that is more centered around zero, keeping the tanh neurons in their active, non-saturated region where gradients can flow effectively. This, again, leads to a measurable improvement in the final model performance.
 
-***
+---
 
 ### 3. A Principled Approach to Initialization
 
@@ -92,7 +92,7 @@ The gain is a constant specific to the nonlinearity used. Activation functions l
 
 Implementing this gives us a semi-principled way to initialize our network that scales to much larger models without manual guesswork.
 
-***
+---
 
 ### 4. Batch Normalization: A Modern Innovation
 
@@ -104,9 +104,7 @@ A BatchNorm layer is typically inserted after a linear or convolutional layer, b
 
 1.  **Calculate Batch Statistics:** It computes the mean ($\mu_B$) and variance ($\sigma^2_B$) of the activations for each neuron independently across all examples in the current mini-batch.
 2.  **Normalize:** It standardizes the activations using the batch statistics, forcing them to have zero mean and unit variance for that batch. An $\epsilon$ is added for numerical stability to prevent division by zero.
-$$\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma^2_B + \epsilon}}$$
-3.  **Scale and Shift:** The network may not always want unit Gaussian activations. Forcing this distribution could limit its expressive power. Therefore, BatchNorm introduces two learnable parameters per neuron: a scale parameter **gamma ($\gamma$)** (initialized to 1) and a shift parameter **beta ($\beta$)** (initialized to 0). These are trained via backpropagation just like regular weights. The final output of the layer is:
-$$y_i = \gamma \hat{x}_i + \beta$$
+$$\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma^2_B + \epsilon}}$$3.  **Scale and Shift:** The network may not always want unit Gaussian activations. Forcing this distribution could limit its expressive power. Therefore, BatchNorm introduces two learnable parameters per neuron: a scale parameter **gamma ($\gamma$)** (initialized to 1) and a shift parameter **beta ($\beta$)** (initialized to 0). These are trained via backpropagation just like regular weights. The final output of the layer is:$$y_i = \gamma \hat{x}_i + \beta$$
 This gives the network the flexibility to learn the optimal scale and mean for each neuron's activations while still enjoying the stabilizing benefits of the normalization.
 
 #### 4.2 Handling Inference Time
@@ -123,15 +121,14 @@ BatchNorm is a powerful but complex layer with several important subtleties:
 * **The Unintended Regularizer:** Because an example's normalized activations depend on the other randomly sampled examples in its mini-batch, a slight "jitter" or noise is introduced into the training process. This acts as a form of **regularization**, making it harder for the network to overfit. This surprising side effect is one reason why BatchNorm remains effective and has been difficult to replace, even though its coupling of batch examples is often seen as undesirable.
 * **Complexity and Bugs:** BatchNorm's dual behavior during training and inference and its coupling of examples make it a frequent source of bugs. Alternatives like Layer Normalization and Group Normalization have been developed to avoid these issues but BatchNorm remains widely used due to its proven effectiveness.
 
-***
+---
 
 ### 5. Diagnostic Tools for a Healthy Network
 
 To truly understand and debug the training process, we need to look beyond the loss curve. Visualizing the statistics of activations, gradients, and parameter updates provides invaluable insight.
 
 **Forward Pass Activation Histograms:** Plot histograms of the activations at each layer (especially after nonlinearities like tanh).
-* **What to look for:** The distributions should be reasonably centered and not overly saturated at the extremes (-1 or 1 for tanh). A healthy network will have similar distributions across all layers, indicating a stable flow of information.
-
+* **What to look for:** The distributions should be reasonably centered and not overly saturated at the extremes (-1 or 1 for tanh). A healthy network will have similar distributions across all layers, indicating a stable flow of information. 
 
 **Backward Pass Gradient Histograms:** Similarly, plot histograms of the gradients flowing back to each layer's activations.
 * **What to look for:** The gradients should also have a consistent scale across layers. If gradients in early layers are much smaller than in later layers, you have a **vanishing gradient** problem. If they are much larger, you have an **exploding gradient** problem.
@@ -145,7 +142,7 @@ To truly understand and debug the training process, we need to look beyond the l
 
 This single plot is an excellent tool for judging if your learning rate is in the right ballpark and if all layers are learning at a comparable pace.
 
-***
+---
 
 ### Summary
 
